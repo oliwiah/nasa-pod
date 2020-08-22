@@ -18,7 +18,7 @@ axios.interceptors.request.use(
 );
 
 export default {
-    getTodaysPod() {
-        return axios.get(`${nasaEndpoint}planetary/apod`);
+    getTodaysPod(date) {
+        return axios.get(`${nasaEndpoint}planetary/apod?date=${date}`);
     },
 };
