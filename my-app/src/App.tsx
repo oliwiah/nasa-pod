@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { Photo } from './Photo/Photo';
 import { Date as DateComponent } from './Date/Date';
-import { FavouritesButton } from './FavouritesButton/FavouritesButton';
+import { FavouritesButton } from './Favourites/FavouritesButton';
 import { Loader } from './components/Loader';
 import fetchApi from './requests/fetchApi';
 import { incrementDate } from './constants/dateOperations';

@@ -3,9 +3,9 @@ import styled from 'styled-components';
 
 const FavButton = styled.button`
     color: #646262;
-    height: 3em;
+    height: 4em;
     min-width: 160px;
-    width: 25%;
+    width: 35%;
     padding: 1.5em auto;
     margin: 1em auto;
     background-color: #FEB1C0;
