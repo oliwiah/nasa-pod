@@ -1,14 +1,14 @@
-import React, { useEffect, useReducer, useContext } from 'react';
-import get from 'lodash/get';
+import React, { ReactNode, useEffect, useReducer } from 'react';
 
+import { PodResponseType } from './../App';
 import { LocalFavouritesService } from './services/LocalFavouritesService';
 
 type Props = {
-    children: React$Node;
+    children: ReactNode;
 };
 
 type ReducerProps = {
-    pods: Array<Object> | null;
+    pods: Array<PodResponseType> | null;
     totalPods: number;
     isLoading: boolean;
 };
@@ -20,7 +20,7 @@ type PayloadProps = {
 type ActionProps = {
     type: string;
     payload?: PayloadProps;
-    pod?: Object;
+    pod?: PodResponseType;
     reduced?: Object;
 };
 
@@ -68,13 +68,13 @@ export const FavouritesContextProvider = ({ children }: Props) => {
         dispatch({ type: 'fetch' });
     };
 
-    const addPod = async (pod) => {
+    const addPod = async (pod: PodResponseType) => {
         localFavouritesService.addPodUrl(pod.url);
 
         dispatch({ type: 'add-pod', pod });
     };
 
-    const removePod = async (pod) => {
+    const removePod = async (pod: PodResponseType) => {
         const reduced = state.pods
             ? state.pods.reduce((acc, current) => {
                   if (current.url !== pod.url) {
@@ -115,16 +115,7 @@ export const FavouritesContextProvider = ({ children }: Props) => {
     );
 };
 
-export type ObservedContextType = {
-    pods: ?Array<T>;
-    totalPods: number;
-    addPod: Function;
-    removePod: Function;
-    refreshPods: Function;
-    isLoading: boolean;
-};
-
-export const FavouritesContext: React$Context<FavouritesContextType> = React.createContext({
+export const FavouritesContext = React.createContext({
     pods: [],
     totalPods: 0,
     addPod: () => null,

@@ -75,7 +75,7 @@ const Explanation = styled.p`
     padding-bottom: 20px;
 `;
 
-interface ResponseType {
+export interface PodResponseType {
     copyright: string;
     date: string;
     explanation: string;
@@ -88,7 +88,7 @@ interface ResponseType {
 
 const App = () => {
     const todaysDate = new Date().toISOString().slice(0,10);
-    const [pod, setPod] = useState<ResponseType>();
+    const [pod, setPod] = useState<PodResponseType>();
     const [title, setTitle] = useState<string>('');
     const [picDate, setPicDate] = useState<string>(todaysDate);
     const [hdurl, setHdurl] = useState<string>('');
