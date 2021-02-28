@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import { Photo } from './Photo/Photo';
-import { Date } from './Date/Date';
+import { Date as DateComponent } from './Date/Date';
+import { FavouritesButton } from './FavouritesButton/FavouritesButton';
+import { Loader } from './components/Loader';
 import fetchApi from './requests/fetchApi';
-import { todaysDate, incrementDate } from './constants/dateOperations';
+import { incrementDate } from './constants/dateOperations';
 
 const AppWrapper = styled.div`
     min-height: 100vh;
@@ -85,17 +87,16 @@ interface ResponseType {
 }
 
 const App = () => {
-    // TO DO
-    // Figure out how to enable using new Date()
-    // const todaysDate = new Date().toISOString().slice(0,10);
-
+    const todaysDate = new Date().toISOString().slice(0,10);
     const [pod, setPod] = useState<ResponseType>();
     const [title, setTitle] = useState<string>('');
     const [picDate, setPicDate] = useState<string>(todaysDate);
     const [hdurl, setHdurl] = useState<string>('');
     const [explanation, setExplanation] = useState<string>('');
+    const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
+        setIsLoading(true);
         fetchApi
             .getTodaysPod(picDate)
             .then((podData) => podData.data)
@@ -106,15 +107,16 @@ const App = () => {
                 setHdurl(data.hdurl);
                 setExplanation(data.explanation);
                 data.media_type === 'image' ? setHdurl(data.hdurl) : setHdurl(data.url);
-            });
+            })
+            .then(() => setIsLoading(false));
     }, [picDate]);
 
-    const getNextPic = (picDate) => {
+    const getNextPic = (picDate: string) => {
         const nextDate = incrementDate(picDate, 1);
         (nextDate > todaysDate) ? setPicDate('1995-06-16') : setPicDate(nextDate);
     };
 
-    const getPrevPic = (picDate) => {
+    const getPrevPic = (picDate: string) => {
         const prevDate = incrementDate(picDate, -1);
         (prevDate < '1995-06-16') ? setPicDate(todaysDate) : setPicDate(prevDate);
     };
@@ -124,12 +126,13 @@ const App = () => {
             <h1>
                 Astronomy Picture of the Day <Smaller>powered by NASA</Smaller>
             </h1>
-            {pod && (
+            {(pod && !isLoading) ? (
                 <div>
                     <BorderWrapper>
                         <h3>{title}</h3>
-                        <Date date={picDate} />
+                        <DateComponent date={picDate} />
                     </BorderWrapper>
+                    <FavouritesButton/>
                     <GalleryWrapper>
                         <LeftArrow onClick={() => getPrevPic(picDate)} />
                         <Photo url={hdurl} />
@@ -138,6 +141,8 @@ const App = () => {
                     <Break />
                     <Explanation>{explanation}</Explanation>
                 </div>
+            ) : (
+                <Loader />
             )}
         </AppWrapper>
     );

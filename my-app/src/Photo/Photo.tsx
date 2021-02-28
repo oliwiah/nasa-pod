@@ -30,6 +30,7 @@ export const Photo = ({ url }: Props) => (
         {url?.includes('image') ? (
             <Image src={url} alt="POD image" />
         ) : (
+            // use <video> html tag https://developer.mozilla.org/en-US/docs/Web/HTML/Element/video
             <iframe width="100%" height="auto" title="POD youtube video" src={url}></iframe>
         )}
     </ImageWrapper>

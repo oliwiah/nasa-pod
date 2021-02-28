@@ -1,6 +1,4 @@
-export const todaysDate = new Date().toISOString().slice(0,10);
-
-export const incrementDate = (date, incrementor) => {
+export const incrementDate = (date: string, incrementor: number) => {
     var parts = date.split("-");
     var dt = new Date(
         parseInt(parts[0], 10),      // year
