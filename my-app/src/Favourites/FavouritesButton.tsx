@@ -1,6 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import { PodResponseType } from '../App';
+import { FavouritesContextProvider } from './FavouritesContext';
+
 const FavButton = styled.button`
     color: #646262;
     height: 4em;
@@ -22,10 +25,16 @@ const FavButton = styled.button`
     }
 `;
 
-export const FavouritesButton = () => {
+type Props = {
+    pod: PodResponseType
+}
+
+export const FavouritesButton = ({ pod }: Props) => {
     const addToFavourites = (e: any) => {
         e.preventDefault();
-        console.log('The link was clicked.');
+        console.log('Pod objecy ===>', pod);
+        //add pod to local storage
+        FavouritesContextProvider.addPod(pod);
     }
 
     return (

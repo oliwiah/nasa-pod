@@ -132,7 +132,7 @@ const App = () => {
                         <h3>{title}</h3>
                         <DateComponent date={picDate} />
                     </BorderWrapper>
-                    <FavouritesButton/>
+                    <FavouritesButton pod={pod} />
                     <GalleryWrapper>
                         <LeftArrow onClick={() => getPrevPic(picDate)} />
                         <Photo url={hdurl} />
