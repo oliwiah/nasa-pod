@@ -34,7 +34,7 @@ export const FavouritesButton = ({ pod }: Props) => {
         e.preventDefault();
         console.log('Pod objecy ===>', pod);
         //add pod to local storage
-        FavouritesContextProvider.addPod(pod);
+        // FavouritesContextProvider.addPod(pod.url);
     }
 
     return (

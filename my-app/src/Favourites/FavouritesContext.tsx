@@ -7,7 +7,7 @@ type Props = {
     children: ReactNode;
 };
 
-type ReducerProps = {
+type State = {
     pods: Array<PodResponseType> | null;
     totalPods: number;
     isLoading: boolean;
@@ -17,20 +17,37 @@ type PayloadProps = {
     data?: Array<Object>;
 };
 
-type ActionProps = {
-    type: string;
-    payload?: PayloadProps;
-    pod?: PodResponseType;
-    reduced?: Object;
+type FetchAction = {
+    type: 'fetch';
 };
 
-const initialState: ReducerProps = {
+type AddPodAction = {
+    type: 'add-pod';
+    payload: {
+        pod: PodResponseType;
+    };
+};
+
+type RemovePodAction = {
+    type: 'remove-pod';
+    payload: {
+        pod: PodResponseType;
+    };
+};
+
+type InitializeFavouritesAction = {
+    type: 'initialize-favourites';
+};
+
+type Action = FetchAction | AddPodAction | RemovePodAction | InitializeFavouritesAction;
+
+const initialState: State = {
     pods: null,
     totalPods: 0,
     isLoading: false,
 };
 
-const reducer = (state: ReducerProps, action: ActionProps) => {
+const reducer = (state: State, action: Action): State => {
     switch (action.type) {
         case 'fetch':
             return {
@@ -40,14 +57,16 @@ const reducer = (state: ReducerProps, action: ActionProps) => {
         case 'add-pod':
             return {
                 ...state,
-                pods: [action.pod, ...(state.pods || [])],
+                pods: [action.payload.pod, ...(state.pods || [])],
                 totalPods: state.totalPods + 1,
                 isLoading: false,
             };
         case 'remove-pod':
             return {
                 ...state,
-                pods: action.reduced,
+                pods: state.pods
+                    ? state.pods.filter((pod) => pod.url !== action.payload.pod.url)
+                    : null,
                 totalPods: state.totalPods > 0 ? state.totalPods - 1 : 0,
                 isLoading: false,
             };
@@ -56,7 +75,7 @@ const reducer = (state: ReducerProps, action: ActionProps) => {
                 ...initialState,
             };
         default:
-            return {};
+            return state;
     }
 };
 
@@ -71,21 +90,13 @@ export const FavouritesContextProvider = ({ children }: Props) => {
     const addPod = async (pod: PodResponseType) => {
         localFavouritesService.addPodUrl(pod.url);
 
-        dispatch({ type: 'add-pod', pod });
+        dispatch({ type: 'add-pod', payload: { pod } });
     };
 
     const removePod = async (pod: PodResponseType) => {
-        const reduced = state.pods
-            ? state.pods.reduce((acc, current) => {
-                  if (current.url !== pod.url) {
-                      acc.push(current);
-                  }
-                  return acc;
-              }, [])
-            : [];
         localFavouritesService.removePodUrl(pod.url);
 
-        dispatch({ type: 'remove-pod', reduced });
+        dispatch({ type: 'remove-pod', payload: { pod } });
     };
 
     const initialize = () => {
@@ -115,11 +126,17 @@ export const FavouritesContextProvider = ({ children }: Props) => {
     );
 };
 
+type FavouritesContextType = State & {
+    addPod: Function;
+    removePod: Function;
+    refreshPods: Function;
+};
+
 export const FavouritesContext = React.createContext({
-    pods: [],
+    addPod: (pod: PodResponseType) => Promise.resolve(),
+    removePod: (pod: PodResponseType) => Promise.resolve(),
+    refreshPods: () => Promise.resolve(),
+    pods: null as PodResponseType[] | null,
     totalPods: 0,
-    addPod: () => null,
-    removePod: () => null,
-    refreshPods: () => null,
     isLoading: false,
 });

@@ -39,6 +39,7 @@ export class LocalFavouritesService {
 
     static getInstance(): LocalFavouritesService {
         if (!this._instance) {
+            // @ts-ignore: Unreachable code error
             this._instance = new LocalFavouritesService();
         }
 
