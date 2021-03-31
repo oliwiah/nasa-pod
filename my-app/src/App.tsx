@@ -7,6 +7,7 @@ import { FavouritesButton } from './Favourites/FavouritesButton';
 import { Loader } from './components/Loader';
 import fetchApi from './requests/fetchApi';
 import { incrementDate } from './constants/dateOperations';
+import { FavouritesContextProvider } from './Favourites/FavouritesContext';
 
 const AppWrapper = styled.div`
     min-height: 100vh;
@@ -87,7 +88,7 @@ export interface PodResponseType {
 }
 
 const App = () => {
-    const todaysDate = new Date().toISOString().slice(0,10);
+    const todaysDate = new Date().toISOString().slice(0, 10);
     const [pod, setPod] = useState<PodResponseType>();
     const [title, setTitle] = useState<string>('');
     const [picDate, setPicDate] = useState<string>(todaysDate);
@@ -113,38 +114,40 @@ const App = () => {
 
     const getNextPic = (picDate: string) => {
         const nextDate = incrementDate(picDate, 1);
-        (nextDate > todaysDate) ? setPicDate('1995-06-16') : setPicDate(nextDate);
+        nextDate > todaysDate ? setPicDate('1995-06-16') : setPicDate(nextDate);
     };
 
     const getPrevPic = (picDate: string) => {
         const prevDate = incrementDate(picDate, -1);
-        (prevDate < '1995-06-16') ? setPicDate(todaysDate) : setPicDate(prevDate);
+        prevDate < '1995-06-16' ? setPicDate(todaysDate) : setPicDate(prevDate);
     };
 
     return (
-        <AppWrapper>
-            <h1>
-                Astronomy Picture of the Day <Smaller>powered by NASA</Smaller>
-            </h1>
-            {(pod && !isLoading) ? (
-                <div>
-                    <BorderWrapper>
-                        <h3>{title}</h3>
-                        <DateComponent date={picDate} />
-                    </BorderWrapper>
-                    <FavouritesButton pod={pod} />
-                    <GalleryWrapper>
-                        <LeftArrow onClick={() => getPrevPic(picDate)} />
-                        <Photo url={hdurl} />
-                        <RightArrow onClick={() => getNextPic(picDate)} />
-                    </GalleryWrapper>
-                    <Break />
-                    <Explanation>{explanation}</Explanation>
-                </div>
-            ) : (
-                <Loader />
-            )}
-        </AppWrapper>
+        <FavouritesContextProvider>
+            <AppWrapper>
+                <h1>
+                    Astronomy Picture of the Day <Smaller>powered by NASA</Smaller>
+                </h1>
+                {pod && !isLoading ? (
+                    <div>
+                        <BorderWrapper>
+                            <h3>{title}</h3>
+                            <DateComponent date={picDate} />
+                        </BorderWrapper>
+                        <FavouritesButton pod={pod} />
+                        <GalleryWrapper>
+                            <LeftArrow onClick={() => getPrevPic(picDate)} />
+                            <Photo url={hdurl} />
+                            <RightArrow onClick={() => getNextPic(picDate)} />
+                        </GalleryWrapper>
+                        <Break />
+                        <Explanation>{explanation}</Explanation>
+                    </div>
+                ) : (
+                    <Loader />
+                )}
+            </AppWrapper>
+        </FavouritesContextProvider>
     );
 };
 
