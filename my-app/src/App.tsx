@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { Photo } from './Photo/Photo';
 import { Date as DateComponent } from './Date/Date';
 import { FavouritesButton } from './Favourites/FavouritesButton';
+import { MyFavourites } from './Favourites/MyFavourites';
 import { Loader } from './components/Loader';
 import fetchApi from './requests/fetchApi';
 import { incrementDate } from './constants/dateOperations';
@@ -128,6 +129,7 @@ const App = () => {
                 <h1>
                     Astronomy Picture of the Day <Smaller>powered by NASA</Smaller>
                 </h1>
+                <MyFavourites />
                 {pod && !isLoading ? (
                     <div>
                         <BorderWrapper>
