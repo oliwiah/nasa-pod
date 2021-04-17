@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { Photo } from './Photo/Photo';
 import { Date as DateComponent } from './Date/Date';
-import { FavouritesButton } from './Favourites/FavouritesButton';
+import { FavouritesButtons } from './Favourites/FavouritesButtons';
 import { MyFavourites } from './Favourites/MyFavourites';
 import { Loader } from './components/Loader';
 import fetchApi from './requests/fetchApi';
@@ -136,7 +136,7 @@ const App = () => {
                             <h3>{title}</h3>
                             <DateComponent date={picDate} />
                         </BorderWrapper>
-                        <FavouritesButton pod={pod} />
+                        <FavouritesButtons pod={pod} />
                         <GalleryWrapper>
                             <LeftArrow onClick={() => getPrevPic(picDate)} />
                             <Photo url={hdurl} />
