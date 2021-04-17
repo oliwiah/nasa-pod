@@ -1,18 +1,17 @@
 import React from 'react';
 
+import { Photo } from '../Photo/Photo';
 import { LocalFavouritesService } from './services/LocalFavouritesService';
 
-export const MyFavourites = () => {
+export const FavouritePods = () => {
     const localFavouritesService = LocalFavouritesService.getInstance();
     const getFavourites = localFavouritesService.getAllPodUrls();
 
     return (
-        <button
-            onClick={() => {
-                console.log(getFavourites);
-            }}
-        >
-            My Favourites
-        </button>
+        <div>
+            {getFavourites.map((url) => (
+                <Photo url={url} />
+            ))}
+        </div>
     );
 };

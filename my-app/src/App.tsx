@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Link, Switch, Route } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { Photo } from './Photo/Photo';
 import { Date as DateComponent } from './Date/Date';
 import { FavouritesButtons } from './Favourites/FavouritesButtons';
-import { MyFavourites } from './Favourites/MyFavourites';
+import { FavouritePods } from './Favourites/FavouritePods';
 import { Loader } from './components/Loader';
 import fetchApi from './requests/fetchApi';
 import { incrementDate } from './constants/dateOperations';
@@ -18,8 +19,33 @@ const AppWrapper = styled.div`
     background-image: linear-gradient(#778da9 0%, #415a77 74%);
 `;
 
+const HeadlineLink = styled(Link)`
+    text-decoration: none;
+`;
+
 const Smaller = styled.span`
     font-size: 12px;
+`;
+
+const MyFavourites = styled.button`
+    color: #646262;
+    height: 2.5em;
+    min-width: 100px;
+    width: 25%;
+    padding: 1.5em auto;
+    margin: 1em auto;
+    background-color: #feb1c0;
+    border: none;
+    border-radius: 3px;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    cursor: pointer;
+
+    &:hover {
+        letter-spacing: 0.8em;
+        background-color: #f08c99;
+    }
 `;
 
 const BorderWrapper = styled.div`
@@ -124,32 +150,46 @@ const App = () => {
     };
 
     return (
-        <FavouritesContextProvider>
-            <AppWrapper>
-                <h1>
-                    Astronomy Picture of the Day <Smaller>powered by NASA</Smaller>
-                </h1>
-                <MyFavourites />
-                {pod && !isLoading ? (
-                    <div>
-                        <BorderWrapper>
-                            <h3>{title}</h3>
-                            <DateComponent date={picDate} />
-                        </BorderWrapper>
-                        <FavouritesButtons pod={pod} />
-                        <GalleryWrapper>
-                            <LeftArrow onClick={() => getPrevPic(picDate)} />
-                            <Photo url={hdurl} />
-                            <RightArrow onClick={() => getNextPic(picDate)} />
-                        </GalleryWrapper>
-                        <Break />
-                        <Explanation>{explanation}</Explanation>
-                    </div>
-                ) : (
-                    <Loader />
-                )}
-            </AppWrapper>
-        </FavouritesContextProvider>
+        <Router>
+            <FavouritesContextProvider>
+                <AppWrapper>
+                    <HeadlineLink to="/">
+                        <h1>
+                            Astronomy Picture of the Day <Smaller>powered by NASA</Smaller>
+                        </h1>
+                    </HeadlineLink>
+                    <Link to="/favourites">
+                        <MyFavourites>My Favourites</MyFavourites>
+                    </Link>
+
+                    <Switch>
+                        <Route path="/favourites">
+                            <FavouritePods />
+                        </Route>
+                        <Route path="/">
+                            {pod && !isLoading ? (
+                                <div>
+                                    <BorderWrapper>
+                                        <h3>{title}</h3>
+                                        <DateComponent date={picDate} />
+                                    </BorderWrapper>
+                                    <FavouritesButtons pod={pod} />
+                                    <GalleryWrapper>
+                                        <LeftArrow onClick={() => getPrevPic(picDate)} />
+                                        <Photo url={hdurl} />
+                                        <RightArrow onClick={() => getNextPic(picDate)} />
+                                    </GalleryWrapper>
+                                    <Break />
+                                    <Explanation>{explanation}</Explanation>
+                                </div>
+                            ) : (
+                                <Loader />
+                            )}
+                        </Route>
+                    </Switch>
+                </AppWrapper>
+            </FavouritesContextProvider>
+        </Router>
     );
 };
 
