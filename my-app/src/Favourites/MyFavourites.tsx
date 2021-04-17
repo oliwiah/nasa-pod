@@ -1,14 +1,18 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
-import { FavouritesContext } from './FavouritesContext';
+import { LocalFavouritesService } from './services/LocalFavouritesService';
 
 export const MyFavourites = () => {
-    const { refreshPods } = useContext(FavouritesContext)
-    const getFavourites = async (): Promise<void> => {
-        console.log(await refreshPods());
-    }
+    const localFavouritesService = LocalFavouritesService.getInstance();
+    const getFavourites = localFavouritesService.getAllPodUrls();
 
     return (
-        <button onClick={getFavourites}>My Favourites</button>
+        <button
+            onClick={() => {
+                console.log(getFavourites);
+            }}
+        >
+            My Favourites
+        </button>
     );
-}
+};
