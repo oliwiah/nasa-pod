@@ -5,15 +5,15 @@ const ImageWrapper = styled.div`
     position: relative;
     margin: auto;
     overflow: hidden;
-    width: 60vw;
 `;
 
 const Image = styled.img`
     max-width: 100%;
     transition: all 0.3s;
     display: block;
-    width: 100%;
-    height: auto;
+    max-width: 60vw;
+    width: auto;
+    height: 50vh;
     transform: scale(1);
 
     &:hover {
